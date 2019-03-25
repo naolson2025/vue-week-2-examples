@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml" lang="English">
 
 <head>
     <title>Student Sign In</title>
@@ -12,6 +12,7 @@
 <body>
     <div id="app">
 
+        <!-- show error alert -->
         <div class="alert alert-danger" v-show="errors && errors.length > 0">
             <li v-for="error in errors">{{ error }}</li>
         </div>
@@ -22,12 +23,18 @@
 
                 <div class="form-group">
                     <label for="name">Name</label>
+                    <!-- v-model -->
+                    <!-- custom event for when name input is used -->
                     <input id="name" class="form-control" v-model.trim="newStudentName">
                 </div>
                 <div class="form-group">
                     <label for="starID">Star ID</label>
+                    <!-- v-model -->
+                    <!-- Will set the newStarID variable in the Vue instance to the value in the HTML input-->
                     <input id="starID" class="form-control" v-model.trim="newStarID">
                 </div>
+
+                <!-- v-on:click event handler -->
                 <button class="btn btn-primary" v-on:click.prevent="addStudent">Add</button>
             </form>
         </div>
@@ -41,6 +48,13 @@
                         <th>StarID</th>
                         <th>Present?</th>
                     </tr>
+
+                    <!-- create table rows
+                    Each row will have a checkbox, bound to the app data
+                    When the checkbox is checked/unchecked, the student will be signed in/out 
+                     -->
+                    <!--use a for loop to add every student in the students data list to a table row-->
+
                     <tr v-for="student in students" v-bind:class="'present-' + student.present">
                         <td>{{ student.name }}</td>
                         <td>{{ student.starID }}</td>
@@ -51,43 +65,53 @@
         </div>
 
         <transition name="fade">
+            <!-- welcome or goodbye message -->
             <div class="alert alert-success" v-if="seeMessage">{{message}} {{mostRecentSignIn}}</div>
         </transition>
     </div>
 
     <script>
 
+        // Vue app
+        // app is a common Vue instance name
         let app = new Vue({
+            // Attach to HTML element app
             el: "#app",
+            // data contains two student examples and blank variables that will be filled by the user
             data: {
+                // newStudentName is updated by the v-model name input
                 newStudentName: '',
                 newStarID: '',
-                students: [{ name: "example", starID: "ab1234cd", present: true }],
+                students: [
+                    { name: "A. Student", starID: "ab1234cd", present: false },
+                    { name: "B. Student", starID: "cd2345fg", present: false}
+                ],
                 mostRecentSignIn: '',
                 message: '',
                 seeMessage: false,
                 errors: []
             },
+            // 3 methods
             methods: {
                 addStudent() {
-                    this.errors = []
+                    this.errors = [];
                     if (this.newStudentName && this.newStarID) {
-                        let student = { name: this.newStudentName, starID: this.newStarID, present: false }
-                        this.students.push(student)
-                        this.students.sort(function (s1, s2) { return s1.name > s2.name ? 1 : -1 })
-                        this.newStudentName = ''
+                        let student = { name: this.newStudentName, starID: this.newStarID, present: false };
+                        this.students.push(student);
+                        this.students.sort(function (s1, s2) { return s1.name > s2.name ? 1 : -1 });
+                        this.newStudentName = '';
                         this.newStarID = ''
                     } else {
                         this.errors.push('Name and StarID are required.')
                     }
                 },
                 checked(student) {
-                    this.message = student.present ? 'Welcome, ' : 'Goodbye, '
-                    this.mostRecentSignIn = student.name
+                    this.message = student.present ? 'Welcome, ' : 'Goodbye, ';
+                    this.mostRecentSignIn = student.name;
                     this.showMessage()
                 },
                 showMessage() {
-                    this.seeMessage = true
+                    this.seeMessage = true;
                     setTimeout(() => {
                         this.seeMessage = false
                     }, 3000)

@@ -2,3 +2,15 @@
     max-height: 250px;
     overflow: scroll;
 }
+
+.record-sketching{
+    background-color: aquamarine;
+}
+
+.record-drawing{
+    background-color: bisque;
+}
+
+.record-painting{
+    background-color: gold;
+}

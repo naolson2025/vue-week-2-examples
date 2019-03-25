@@ -24,11 +24,13 @@
                 <div class="form-group">
                     <label for="name">Name</label>
                     <!-- v-model -->
+                    <!-- custom event for when name input is used -->
                     <input id="name" class="form-control" v-model.trim="newStudentName">
                 </div>
                 <div class="form-group">
                     <label for="starID">Star ID</label>
                     <!-- v-model -->
+                    <!-- Will set the newStarID variable in the Vue instance to the value in the HTML input-->
                     <input id="starID" class="form-control" v-model.trim="newStarID">
                 </div>
 
@@ -50,6 +52,7 @@
                     Each row will have a checkbox, bound to the app data
                     When the checkbox is checked/unchecked, the student will be signed in/out 
                      -->
+                    <!--use a for loop to add every student in the students data list to a table row-->
                     <tr v-for="student in students" v-bind:class="'present-' + student.present">
                         <td>{{ student.name }}</td>
                         <td>{{ student.starID }}</td>
@@ -68,18 +71,25 @@
     <script>
 
         // Vue app
-
+        // app is a common Vue instance name
         let app = new Vue({
+            // Attach to HTML element app
             el: "#app",
+            // data contains two student examples and blank variables that will be filled by the user
             data: {
+                // newStudentName is updated by the v-model name input
                 newStudentName: '',
                 newStarID: '',
-                students: [{ name: "example", starID: "ab1234cd", present: true }],
+                students: [
+                    { name: "A. Student", starID: "ab1234cd", present: false },
+                    { name: "B. Student", starID: "cd2345fg", present: false}
+                ],
                 mostRecentSignIn: '',
                 message: '',
                 seeMessage: false,
                 errors: []
             },
+            // 3 methods
             methods: {
                 addStudent() {
                     this.errors = [];
